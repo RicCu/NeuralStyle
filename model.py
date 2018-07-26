@@ -74,25 +74,6 @@ class FastStyle(nn.Module):
         self._init()
 
     def forward(self, x):
-        def reflect_padding(x, f, s, half=False):
-            if half:
-                denom = 2
-            else:
-                denom= 1
-            _, _, h, w = x.data.shape
-            pad_w = (w * ((s/denom) - 1) + f - s)
-            pad_h = (h * ((s/denom) - 1) + f - s)
-            if pad_w % 2 == 1:
-                pad_l = int(pad_w//2) + 1
-                pad_r = int(pad_w//2)
-            else:
-                pad_l = pad_r = int(pad_w / 2)
-            if pad_h % 2 == 1:
-                pad_t = int(pad_h//2) + 1
-                pad_b = int(pad_h//2)
-            else:
-                pad_t = pad_b = int(pad_h / 2)
-            return F.pad(x, [pad_l, pad_r, pad_t, pad_b], mode='reflect')
         h = self.conv1(reflect_padding(x, 9, 1))
         h = self.conv2(reflect_padding(h, 3, 2, True))
         h = self.conv3(reflect_padding(h, 3, 2, True))
@@ -119,4 +100,24 @@ class FastStyle(nn.Module):
                 nn.init.constant_(m.bias.data, 0)
         self.apply(__init)
 
+
+def reflect_padding(x, f, s, half=False):
+    if half:
+        denom = 2
+    else:
+        denom= 1
+    _, _, h, w = x.data.shape
+    pad_w = (w * ((s/denom) - 1) + f - s)
+    pad_h = (h * ((s/denom) - 1) + f - s)
+    if pad_w % 2 == 1:
+        pad_l = int(pad_w//2) + 1
+        pad_r = int(pad_w//2)
+    else:
+        pad_l = pad_r = int(pad_w / 2)
+    if pad_h % 2 == 1:
+        pad_t = int(pad_h//2) + 1
+        pad_b = int(pad_h//2)
+    else:
+        pad_t = pad_b = int(pad_h / 2)
+    return F.pad(x, [pad_l, pad_r, pad_t, pad_b], mode='reflect')
 
