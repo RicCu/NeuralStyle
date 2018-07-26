@@ -71,7 +71,7 @@ class FastStyle(nn.Module):
         self.convT1 = ConvTran(128, 64)
         self.convT2 = ConvTran(64, 32)
         self.conv_out = Conv(32, 3, 9, use_relu=False)
-        self.init()
+        self._init()
 
     def forward(self, x):
         def reflect_padding(x, f, s, half=False):
@@ -107,16 +107,16 @@ class FastStyle(nn.Module):
         h = F.tanh(h) * 0.5 + 0.5
         return h
 
-    def init(self):
-        def _init(m):
+    def _init(self):
+        def __init(m):
             if isinstance(m, nn.Conv2d):
-                nn.init.xavier_uniform(m.weight.data)
+                nn.init.xavier_uniform_(m.weight.data)
                 #nn.init.normal(m.weight.data, std=0.1)
-                nn.init.constant(m.bias.data, 0) # TODO replace with zero!
+                nn.init.constant_(m.bias.data, 0) # TODO replace with zero!
             if isinstance(m, nn.ConvTranspose2d):
-                nn.init.xavier_uniform(m.weight.data)
+                nn.init.xavier_uniform_(m.weight.data)
                 #nn.init.normal(m.weight.data, std=0.1)
-                nn.init.constant(m.bias.data, 0)
-        self.apply(_init)
+                nn.init.constant_(m.bias.data, 0)
+        self.apply(__init)
 
 
