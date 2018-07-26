@@ -56,23 +56,17 @@ def train(params):
 
     # Prepare inputs and networks
     data = utils.build_dataloader(params.content_data, params.shape,
-                                  params.batch_size, params.cuda)
-    style_img = utils.load_image(params.style_data)
-    net = FastStyle()
-    vgg = VGG16(STYLE_LAYERS) # TODO include ALL layers generic way?
+                                  params.batch_size, params.device)
+    style_img = utils.load_image(params.style_data).to(params.device)
+    net = FastStyle().to(params.device)
+    vgg = VGG16(STYLE_LAYERS).to(params.device)
     vgg.eval()
-    if params.cuda:
-        style_img = style_img.cuda()
-        net.cuda()
-        vgg.cuda()
 
     # Prepare loss functions and optimizer
     style_activations = vgg(style_img)
     lossFn = PerceptualLoss(style_activations, STYLE_LAYERS, CONTENT_LAYERS,
                             params.style_weight, params.content_weight,
-                            params.tv_weight)
-    if params.cuda:
-        lossFn.cuda()
+                            params.tv_weight).to(params.device)
     del style_img
     del style_activations
     torch.cuda.empty_cache()
@@ -84,8 +78,7 @@ def train(params):
         start = time()
         total_score = style_score = content_score = tv_score = 0
         for content, _ in data:
-            if params.cuda:
-                content = content.cuda()
+            content = content.to(params.device)
             optimizer.zero_grad()
             image = net(content)
             activations = vgg(image)
@@ -166,7 +159,7 @@ def main():
                          'evaluation')
         eval(params)
     else:
-        params = utils.test_cuda(params)
+        params = utils.set_device(params)
         train(params)
 
 

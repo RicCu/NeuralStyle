@@ -32,25 +32,19 @@ def train(params):
     image_logger = monitor.Image('Transfomed', env=params.name)
 
     # Prepare inputs and feature extraction network
-    content_img = utils.load_image(params.content_data, params.shape)
-    style_img = utils.load_image(params.style_data)
-    image = torch.FloatTensor(1, 3, *params.shape).uniform_()
-    vgg = VGG16(STYLE_LAYERS)
-    if params.cuda:
-        content_img = content_img.cuda()
-        style_img = style_img.cuda()
-        image = image.cuda()
-        vgg.cuda()
+    content_img = utils.load_image(params.content_data,
+                                   params.shape).to(params.device)
+    style_img = utils.load_image(params.style_data).to(params.device)
+    image = torch.empty(1, 3, *params.shape, device=params.device,
+                        requires_grad=True).uniform_()
+    vgg = VGG16(STYLE_LAYERS).to(params.device)
     vgg.eval()
-    image.requires_grad = True
 
     # Prepare loss function and optimizer
     style_activations = vgg(style_img)
     loss_fn = PerceptualLoss(style_activations, STYLE_LAYERS, CONTENT_LAYERS,
                              params.style_weight, params.content_weight,
-                             params.tv_weight)
-    if params.cuda:
-        loss_fn.cuda()
+                             params.tv_weight).to(params.device)
     del style_img
     del style_activations
     optimizer = optim.LBFGS([image])
@@ -120,7 +114,7 @@ def main():
     parser.add_argument('--epochs', type=int, default=500,
                         help='Number of epochs to optimize')
     params = parser.parse_args()
-    params = utils.test_cuda(params)
+    params = utils.set_device(params)
     train(params)
 
 

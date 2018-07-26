@@ -15,7 +15,7 @@ RGB_STD = (0.229, 0.224, 0.225)
 
 def build_common_arguments(parser):
     parser.add_argument('--cuda', action='store_true', default=False,
-                        help='Use cuda if available')
+                        dest='device', help='Use cuda if available')
     parser.add_argument('--style-data', type=str, default='styles/scream.jpg',
                         help='Style image')
     parser.add_argument('--shape', default=[256, 256], nargs='+', type=int,
@@ -41,14 +41,16 @@ def build_common_arguments(parser):
     return parser
 
 
-def test_cuda(params):
-    if params.cuda:
+def set_device(params):
+    if params.device:
         if torch.cuda.is_available():
-            params.cuda = True
+            params.device = torch.device('cuda')
         else:
             print('Cuda was selected but is not available, continuing on cpu '
                   'only')
-            params.cuda = False
+            params.device = torch.device('cpu')
+    else:
+        params.device = torch.device('cpu')
     return params
 
 
@@ -73,9 +75,13 @@ def load_image(path_to_image, shape=None):
     return img
 
 
-def build_dataloader(path_to_data, img_shape, batch_size, pin_memory=False,
-                     num_workers=2):
+def build_dataloader(path_to_data, img_shape, batch_size,
+                     device=torch.device('cpu'), num_workers=2):
     """Initialize an ImageFolder DataLoader with preprocessing pipeline"""
+    if device.type == 'cuda':
+        pin_memory = True
+    else:
+        pin_memory = False
     transform = transforms.Compose([transforms.Resize(img_shape),
                                     transforms.ToTensor(),
                                     transforms.Normalize(mean=RGB_MEAN,

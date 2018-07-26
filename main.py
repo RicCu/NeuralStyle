@@ -4,11 +4,12 @@ import argparse
 import torch
 import descriptive
 import generative
+import utils
 
 def build_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--cuda', action='store_true', default=False,
-                        help='Use cuda if available')
+                        dest='device', help='Use cuda if available')
     parser.add_argument('--descriptive', action='store_true', default=False,
                         help='Perform descriptive style transfer')
     parser.add_argument('--generative', action='store_true', default=False,
@@ -45,13 +46,7 @@ def build_parser():
 def main():
     parser = build_parser()
     FLAGS = parser.parse_args()
-    if FLAGS.cuda:
-        if torch.cuda.is_available():
-            FLAGS.cuda = True
-        else:
-            print('Cuda was selected but is not available, continuing on cpu '
-                  'only')
-            FLAGS.cuda = False
+    FLAGS = utils.set_device(FLAGS)
     if FLAGS.descriptive:
         descriptive.train(FLAGS)
     if FLAGS.generative:
