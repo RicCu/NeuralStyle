@@ -92,11 +92,9 @@ class FastStyle(nn.Module):
         def __init(m):
             if isinstance(m, nn.Conv2d):
                 nn.init.xavier_uniform_(m.weight.data)
-                #nn.init.normal(m.weight.data, std=0.1)
                 nn.init.constant_(m.bias.data, 0) # TODO replace with zero!
             if isinstance(m, nn.ConvTranspose2d):
                 nn.init.xavier_uniform_(m.weight.data)
-                #nn.init.normal(m.weight.data, std=0.1)
                 nn.init.constant_(m.bias.data, 0)
         self.apply(__init)
 
