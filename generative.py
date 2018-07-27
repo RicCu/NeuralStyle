@@ -50,9 +50,10 @@ def train(params):
     except FileExistsError:
         pass
     try:
-        MODEL_DIRECTORY = os.mkdir('ckpt/{}'.format(params.name))
-    except FileExistsError:
         MODEL_DIRECTORY = 'ckpt/{}'.format(params.name)
+        os.mkdir(MODEL_DIRECTORY)
+    except FileExistsError:
+        pass
 
     # Prepare visualizations
     total_loss_graph = monitor.Scalar(TOTAL_LOSS_WIN, title='Total loss',
