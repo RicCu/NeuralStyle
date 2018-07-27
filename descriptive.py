@@ -106,7 +106,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser = utils.build_common_arguments(parser)
-    parser.add_argument('--content-data', type=str, default='img/guadalajara.jpg',
+    parser.add_argument('--content-data', type=str, default='.assets/guadalajara.jpg',
                         help='Content image to transform')
     parser.add_argument('--save-directory', type=str, default='transformed',
                         help='Directory to store resulting images')

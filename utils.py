@@ -16,7 +16,8 @@ RGB_STD = (0.229, 0.224, 0.225)
 def build_common_arguments(parser):
     parser.add_argument('--cuda', action='store_true', default=False,
                         dest='device', help='Use cuda if available')
-    parser.add_argument('--style-data', type=str, default='styles/scream.jpg',
+    parser.add_argument('--style-data', type=str,
+                        default='.assets/styles/scream.jpg',
                         help='Style image')
     parser.add_argument('--shape', default=[256, 256], nargs='+', type=int,
                         help='Height x width')
