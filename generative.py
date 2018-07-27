@@ -133,7 +133,8 @@ def eval(params):
         net = FastStyle()
         net.load_state_dict(torch.load(params.model))
         img = net(content_img).squeeze(0)
-        torchvision.utils.save_image(img, params.name+params.content_data)
+        img_name = params.name + '_' + params.content_data.split('/')[-1]
+        torchvision.utils.save_image(img, img_name)
 
 
 def main():
