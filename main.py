@@ -1,7 +1,9 @@
 """Main script from which to launch style transfer jobs"""
 
 import argparse
+
 import torch
+
 import descriptive
 import generative
 import utils

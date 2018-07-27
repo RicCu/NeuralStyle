@@ -1,10 +1,10 @@
-import torch
-import torchvision
-
-import visdom
-from PIL import ImageColor
 
 from collections import Iterable
+
+import torch
+import torchvision
+import visdom
+from PIL import ImageColor
 
 
 class Scalar():

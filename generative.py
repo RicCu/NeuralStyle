@@ -1,22 +1,19 @@
 """Train a generative style transfer network"""
 
-import torch
-from torch import optim
-from torch.utils.data import DataLoader
-
-import torchvision
-from torchvision.datasets import ImageFolder
-
-from PIL import Image
-
 import os
-
 from time import sleep, time
 
-from loss import *
+import torch
+import torchvision
+from torch import optim
+from torch.utils.data import DataLoader
+from torchvision.datasets import ImageFolder
+from PIL import Image
+
 import monitor
-from model import FastStyle
 import utils
+from loss import *
+from model import FastStyle
 
 
 CONTENT_LAYERS = ['relu_4']

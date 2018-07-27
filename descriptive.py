@@ -1,15 +1,13 @@
 """Transfer style between images"""
 
 import torch
-from torch import optim
-
 import torchvision
-
+from torch import optim
 from PIL import Image
 
-from loss import VGG16, PerceptualLoss
 import monitor
 import utils
+from loss import VGG16, PerceptualLoss
 
 
 CONTENT_LAYERS = ['relu_4']

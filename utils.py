@@ -1,9 +1,9 @@
 """Set of utility functions to promote code reuse"""
 
 import argparse
+
 import torch
 from torch.utils.data import DataLoader
-
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
 from PIL import Image
