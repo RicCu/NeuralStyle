@@ -1,4 +1,16 @@
-"""Transfer style between images"""
+"""Descriptive neural style transfer between images.
+
+These implementations generally follow the original papers, but do not
+intend to exactly replicate the architectures, hyperparameters or
+results.
+
+    Gatys L., Ecker A., Bethge M. (2015). A Neural Algorithm of
+        Artistic Style. arXiv:1508.06576v2
+    Johnson J., Alahi A., Fei-Fei L. (2016). Perceptual Losses for
+        Real-Time Style Transfer and Super-Resolution.
+        arXiv:1603.08155v1
+"""
+
 
 import torch
 import torchvision

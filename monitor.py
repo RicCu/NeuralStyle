@@ -1,3 +1,5 @@
+"""Utilities to log results to visdom"""
+
 
 from collections import Iterable
 

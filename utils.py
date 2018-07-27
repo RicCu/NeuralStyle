@@ -1,4 +1,4 @@
-"""Set of utility functions to promote code reuse"""
+"""Set of common utility functions"""
 
 import argparse
 
