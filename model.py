@@ -97,7 +97,7 @@ class FastStyle(nn.Module):
         h = self.convT1(h)
         h = self.convT2(h)
         h = self.conv_out(reflect_padding(h, 9, 1))
-        h = F.tanh(h) * 0.5 + 0.5
+        h = torch.tanh(h) * 0.5 + 0.5
         return h
 
     def _init(self):

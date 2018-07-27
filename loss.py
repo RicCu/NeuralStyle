@@ -37,7 +37,7 @@ class StyleLoss(nn.Module):
     def __init__(self, target_feature_map):
         super(StyleLoss, self).__init__()
         self.register_buffer('target', gram(target_feature_map.detach()))
-        self.criterion = nn.MSELoss(size_average=False)
+        self.criterion = nn.MSELoss(reduction='sum')
 
     def forward(self, x):
         b, _, _, _ = x.shape
@@ -63,7 +63,7 @@ class ContentLoss(nn.Module):
     """
     def __init__(self):
         super(ContentLoss, self).__init__()
-        self.criterion = nn.MSELoss(size_average=False)
+        self.criterion = nn.MSELoss(reduction='sum')
 
     def forward(self, x, target):
         _, c, h, w = x.shape # TODO Dynamic or static into weight?
