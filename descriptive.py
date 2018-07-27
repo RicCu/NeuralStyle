@@ -44,7 +44,7 @@ def train(params):
     loss_fn = PerceptualLoss(style_activations, STYLE_LAYERS, CONTENT_LAYERS,
                              params.style_weight, params.content_weight,
                              params.tv_weight).to(params.device)
-    optimizer = optim.LBFGS([image])
+    optimizer = optim.LBFGS([image], lr=params.learning_rate)
     del style_img
     del content_img
     del style_activations
@@ -57,10 +57,10 @@ def train(params):
     # Optimization loop
     for epoch in range(1, params.epochs + 1):
         def closure():
+            image.data.clamp_(0, 1)
             optimizer.zero_grad()
             losses = loss_fn(vgg(image), image, content_activations)
             losses['total_loss'].backward()
-            image.data.clamp_(0, 1)
             # Store statistics
             style_score.append(losses['style_loss'].item())
             content_score.append(losses['content_loss'].item())
@@ -94,12 +94,12 @@ def train(params):
             image_logger.add(epoch, image)
             file_name = '{}/{}_{}.jpg'.format(params.save_directory,
                                               params.name, epoch)
-            torchvision.utils.save_image(image.data, file_name)
+            torchvision.utils.save_image(image, file_name)
 
     # Save the image of the last epoch
     file_name = '{}/{}_{}.jpg'.format(params.save_directory, params.name,
                                       epoch)
-    torchvision.utils.save_image(image.data, file_name)
+    torchvision.utils.save_image(image, file_name)
 
 
 def main():
