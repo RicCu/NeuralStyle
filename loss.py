@@ -14,7 +14,7 @@ def gram(feature_map):
     Returns:
         gram matrix of shape N*channels*channels
     """
-    b, c, h, w = feature_map.data.shape
+    b, c, h, w = feature_map.shape
     fm = feature_map.view([b, c, h * w])
     fm_t = fm.transpose(1, 2)
     gram = torch.matmul(fm, fm_t) / (c * h * w)
@@ -54,7 +54,7 @@ class ContentLoss(nn.Module):
         self.criterion = nn.MSELoss(size_average=False)
 
     def forward(self, x, target):
-        _, c, h, w = x.data.shape # TODO Dynamic or static into weight?
+        _, c, h, w = x.shape # TODO Dynamic or static into weight?
         self.loss = self.criterion(x, target.detach()) / (c*h*w)
         return self.loss
 
@@ -72,7 +72,7 @@ class TVLoss(nn.Module):
     def forward(self, x):
         X = x.detach()
         XX = x#.clone()
-        b, c, h, w = X.data.shape
+        b, c, h, w = X.shape
         y_tv = self.criterion(XX[:, :, 1:, :], X[:, :, :h-1, :])
         x_tv = self.criterion(XX[:, :, :, 1:], X[:, :, :, :w-1])
         self.loss = (y_tv + x_tv) # / (c*h*w) # TODO Normalize?

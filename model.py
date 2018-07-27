@@ -91,11 +91,11 @@ class FastStyle(nn.Module):
     def _init(self):
         def __init(m):
             if isinstance(m, nn.Conv2d):
-                nn.init.xavier_uniform_(m.weight.data)
-                nn.init.constant_(m.bias.data, 0) # TODO replace with zero!
+                nn.init.xavier_uniform_(m.weight)
+                nn.init.constant_(m.bias, 0) # TODO replace with zero!
             if isinstance(m, nn.ConvTranspose2d):
-                nn.init.xavier_uniform_(m.weight.data)
-                nn.init.constant_(m.bias.data, 0)
+                nn.init.xavier_uniform_(m.weight)
+                nn.init.constant_(m.bias, 0)
         self.apply(__init)
 
 
@@ -104,7 +104,7 @@ def reflect_padding(x, f, s, half=False):
         denom = 2
     else:
         denom= 1
-    _, _, h, w = x.data.shape
+    _, _, h, w = x.shape
     pad_w = (w * ((s/denom) - 1) + f - s)
     pad_h = (h * ((s/denom) - 1) + f - s)
     if pad_w % 2 == 1:
