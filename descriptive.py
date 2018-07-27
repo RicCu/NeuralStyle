@@ -80,10 +80,11 @@ def train(params):
             losses_graph.add(epoch, content_score.detach(), CONTENT_LOSS_TRACE)
             losses_graph.add(epoch, tv_score.detach(), TV_LOSS_TRACE)
             print('Epoch {}, style loss {:.5f}, '
-                  'content loss {:.5f}, tv loss {:.5f}'.format(epoch,
-                                                               style_score.item(),
-                                                               content_score.item(),
-                                                               tv_score.item()))
+                  'content loss {:.5f}, tv loss {:.5f}'.format(
+                      epoch,
+                      style_score.item(),
+                      content_score.item(),
+                      tv_score.item()))
             style_score = list()
             content_score = list()
             tv_score = list()
@@ -106,7 +107,8 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser = utils.build_common_arguments(parser)
-    parser.add_argument('--content-data', type=str, default='.assets/guadalajara.jpg',
+    parser.add_argument('--content-data', type=str,
+                        default='.assets/guadalajara.jpg',
                         help='Content image to transform')
     parser.add_argument('--save-directory', type=str, default='transformed',
                         help='Directory to store resulting images')
