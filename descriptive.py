@@ -44,7 +44,9 @@ def train(params):
     loss_fn = PerceptualLoss(style_activations, STYLE_LAYERS, CONTENT_LAYERS,
                              params.style_weight, params.content_weight,
                              params.tv_weight).to(params.device)
-    optimizer = optim.LBFGS([image], lr=params.learning_rate)
+    # TODO LBFGS gets stuck, must investigate
+    # optimizer = optim.LBFGS([image], lr=params.learning_rate)
+    optimizer = optim.Adam([image], lr=params.learning_rate)
     del style_img
     del content_img
     del style_activations
