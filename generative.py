@@ -12,7 +12,6 @@ results.
 """
 
 
-import os
 from time import sleep, time
 
 import torch
@@ -45,15 +44,8 @@ def train(params):
         params (object): Holds all the necessary parameters top define the
             trainig regime
     """
-    try:
-        os.mkdir('ckpt')
-    except FileExistsError:
-        pass
-    try:
-        MODEL_DIRECTORY = 'ckpt/{}'.format(params.name)
-        os.mkdir(MODEL_DIRECTORY)
-    except FileExistsError:
-        pass
+    MODEL_DIRECTORY = 'ckpt/{}'.format(params.name)
+    utils.maybe_create_dir(MODEL_DIRECTORY)
 
     # Prepare visualizations
     total_loss_graph = monitor.Scalar(TOTAL_LOSS_WIN, title='Total loss',

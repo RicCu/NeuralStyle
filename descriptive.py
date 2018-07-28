@@ -33,13 +33,14 @@ TV_LOSS_TRACE = 'tv'
 
 
 def train(params):
-    # Prepare visualizations
+    # Prepare visualizations and directory
     total_loss_graph = monitor.Scalar(LOSS_WIN, title='Total loss',
                                       xlabel='epoch', ylabel='loss',
                                       env=params.name)
     losses_graph = monitor.Scalar(LOSSES_WIN, title='Losses', xlabel='step',
                                   ylabel='loss', env=params.name)
     image_logger = monitor.Image('Transfomed', env=params.name)
+    utils.maybe_create_dir(params.save_directory)
 
     # Prepare inputs and feature extraction network
     content_img = utils.load_image(params.content_data,

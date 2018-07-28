@@ -1,6 +1,7 @@
 """Set of common utility functions"""
 
 import argparse
+import os
 
 import torch
 from torch.utils.data import DataLoader
@@ -91,3 +92,9 @@ def build_dataloader(path_to_data, img_shape, batch_size,
     data = DataLoader(dataset, batch_size, True, num_workers=num_workers,
                       pin_memory=pin_memory, drop_last=True)
     return data
+
+
+def maybe_create_dir(directory):
+    """Create a new (potentially nested) directory if it doesn't exist."""
+    if not os.path.exists(directory):
+        os.makedirs(directory)
