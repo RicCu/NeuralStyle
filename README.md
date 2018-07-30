@@ -21,7 +21,7 @@ respectively. Common arguments include:
 - `--cuda` use single gpu if available
 - `--style-data` path to target style image
 - `--content-data` path to a directory of directories with images (*generative*) or a single image (*descriptive*)
-- `--shape` height and width for content data (optional for descriptive algorithm)
+- `--shape` height and width for content data
 - `--content-weight` weight for content-component loss
 - `--style-weight` weight for style-component loss
 - `--tv-weight` weight for total variation-component loss
