@@ -38,6 +38,13 @@ respectively. Common arguments include:
 - `--eval` use to transform an image with a pretrained model
 - `--model` path to pretrained model (used with `--eval`)
 
+**export.py**
+Script to export pretrained models into ONNX.
+
+- `--ckpt` path to pretrained model, it must include the file's parent directory, this will be used as the new file's name
+- `--data` dummy image to use during export, if this isn't set, a random tensor will be used, but shape must be set
+- `--shape` height and width of dummy image
+
 For live visualizations you must have a local visdom server running: `python -m visdom.server`.
 
 **Examples**
