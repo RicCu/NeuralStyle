@@ -57,8 +57,8 @@ python descriptive.py --content-data .assets/guadalajara.jpg --style-data .asset
 Alternatively, the script `main.py` may be used with the flags `--descriptive` or `--generative`.
 
 ## References
-**[1]** [Jing, et al. (2018). *Neural Style Transfer: A Review*. arXiv:1705.04058v6](https://arxiv.org/abs/1705.04058)
+**[1]** [Jing, et al. (2018). *Neural Style Transfer: A Review*. arXiv:1705.04058v6 [cs.CV]](https://arxiv.org/abs/1705.04058)
 
-**[2]** [Gatys L., Ecker A., Bethge M. (2015). *A Neural Algorithm of Artistic Style*. arXiv:1508.06576v2](https://arxiv.org/abs/1508.06576)
+**[2]** [Gatys L., Ecker A., Bethge M. (2015). *A Neural Algorithm of Artistic Style*. arXiv:1508.06576v2 [cs.CV]](https://arxiv.org/abs/1508.06576)
 
-**[3]** [Johnson J., Alahi A., Fei-Fei L. (2016). *Perceptual Losses for Real-Time Style Transfer and Super-Resolution*. arXiv:1603.08155v1](https://arxiv.org/abs/1603.08155)
+**[3]** [Johnson J., Alahi A., Fei-Fei L. (2016). *Perceptual Losses for Real-Time Style Transfer and Super-Resolution*. arXiv:1603.08155v1 [cs.CV]](https://arxiv.org/abs/1603.08155)
