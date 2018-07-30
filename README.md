@@ -8,6 +8,13 @@ This project uses [PyTorch 0.4.1](https://github.com/pytorch/pytorch/releases/ta
 [Visdom (8c6322d)](https://github.com/facebookresearch/visdom) for training visualizations. Please refer to their corresponding
 project websites for installation instructions.
 
+## Examples
+![Guadalajara](../master/.assets/guadalajara.jpg)
+
+![Udnie Guadalajara](../master/.assets/udnie_guadalajara.jpg)
+
+![Scream Guadalajara](../master/.assets/scream_guadalajara.jpg)
+
 ## Usage
 The scripts `descriptive.py` and `generative.py` may be used to iteratively transform a single image or train a neural network,
 respectively. Common arguments include:
