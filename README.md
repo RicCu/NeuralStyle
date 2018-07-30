@@ -1,6 +1,6 @@
 # NeuralStyle
 This repository includes implementations for descriptive and generative style transfer techniques. The algorithms are generally
-based on the originals introduced in [2] and [3], however it's not intended to reproduce the exact results of either paper, 
+based on the originals introduced in [[2]](../master/README.md#references) and [[3]](../master/README.md#references), however it's not intended to reproduce the exact results of either paper, 
 thus some hyperparameters and other implementation details have been changed.
 
 ## Dependencies
