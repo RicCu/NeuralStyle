@@ -42,6 +42,11 @@ def build_parser():
     parser.add_argument('--log-images-every', type=int, default=500,
                         help='Number of steps before logging the generated '
                         'images')
+    parser.add_argument('--texture', default=False, action='store_true',
+                        help='Set flag to use a Texture Network')
+    parser.add_argument('--noise-scale', type=float, default=1.0,
+                        help='Scale of the noise tensor in Texture Networks. '
+                        'This only has an effect if --texture is set')
     return parser
 
 
