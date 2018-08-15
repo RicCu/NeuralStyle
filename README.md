@@ -1,12 +1,10 @@
 # NeuralStyle
-This repository includes implementations for descriptive and generative style transfer techniques. The algorithms are generally
-based on the originals introduced in [[2]](../master/README.md#references) and [[3]](../master/README.md#references), however it's not intended to reproduce the exact results of either paper, 
+This repository includes implementations for descriptive and generative (including Texture Networks) style transfer techniques. The algorithms are generally based on the originals introduced in [[2]](../master/README.md#references), [[3]](../master/README.md#references) and [[4]](../master/README.md#references), however it's not intended to reproduce the exact results of either paper, 
 thus some hyperparameters and other implementation details have been changed.
 
 ## Dependencies
 This project uses [PyTorch 0.4.1](https://github.com/pytorch/pytorch/releases/tag/v0.4.1) and 
-[Visdom (8c6322d)](https://github.com/facebookresearch/visdom) for training visualizations. Please refer to their corresponding
-project websites for installation instructions.
+[Visdom (8c6322d)](https://github.com/facebookresearch/visdom) for training visualizations. Please refer to their corresponding project websites for installation instructions.
 
 ## Examples
 ![Guadalajara](../master/.assets/guadalajara.jpg)
@@ -16,8 +14,7 @@ project websites for installation instructions.
 ![Scream Guadalajara](../master/.assets/scream_guadalajara.jpg)
 
 ## Usage
-The scripts `descriptive.py` and `generative.py` may be used to iteratively transform a single image or train a neural network,
-respectively. Common arguments include:
+The scripts `descriptive.py` and `generative.py` may be used to iteratively transform a single image or train a neural network, respectively. Common arguments include:
 - `--cuda` use single gpu if available
 - `--style-data` path to target style image
 - `--content-data` path to a directory of directories with images (*generative*) or a single image (*descriptive*)
@@ -37,6 +34,8 @@ respectively. Common arguments include:
 **generative.py** also has the options:
 - `--eval` use to transform an image with a pretrained model
 - `--model` path to pretrained model (used with `--eval`)
+- `--texture` use to train or evaluate a Texture Network
+- `--noise-scale` set a float to scale the magnitude of the noise tensor in Texture Networks
 
 **export.py**
 Script to export pretrained models into ONNX.
@@ -62,3 +61,5 @@ Alternatively, the script `main.py` may be used with the flags `--descriptive` o
 **[2]** [Gatys L., Ecker A., Bethge M. (2015). *A Neural Algorithm of Artistic Style*. arXiv:1508.06576v2 [cs.CV]](https://arxiv.org/abs/1508.06576)
 
 **[3]** [Johnson J., Alahi A., Fei-Fei L. (2016). *Perceptual Losses for Real-Time Style Transfer and Super-Resolution*. arXiv:1603.08155v1 [cs.CV]](https://arxiv.org/abs/1603.08155)
+
+**[4]** [Ulyanov D., et al. (2016). *Texture Networks: Feed-forward Synthesis of Textures and Stylized Images*. arXiv:1603.03417v1 [cs.CV]](https://arxiv.org/abs/1603.03417)
