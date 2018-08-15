@@ -7,6 +7,7 @@ import torch
 
 import utils
 from model import FastStyle
+from model import TextureNetwork
 
 
 INPUT_NAME = ['original',]
@@ -24,6 +25,11 @@ def main():
                         'as the export\'s name')
     parser.add_argument('--shape', nargs='+', type=int,
                         help='Height x width')
+    parser.add_argument('--texture', default=False, action='store_true',
+                        help='Set flag to use a Texture Network')
+    parser.add_argument('--noise-scale', type=float, default=1.0,
+                        help='Scale of the noise tensor in Texture Networks. '
+                        'This only has an effect if --texture is set')
     params = parser.parse_args()
 
     assert (params.data is not None or params.shape is not None), ('Set at '
@@ -38,7 +44,12 @@ def main():
         data = torch.randn(1, 3, *params.shape)
     else:
         data = utils.load_image(params.data, params.shape)
-    model = FastStyle()
+    if params.texture:
+        raise NotImplementedError('upsample_nearest2d op cannot be exported '
+                                  'yet')
+        model = TextureNetwork(noise_scale=params.noise_scale)
+    else:
+        model = FastStyle()
 
     # Get model name from checkpoint directory
     model_name = params.ckpt.split('/')[-2]
@@ -52,4 +63,3 @@ def main():
 
 if __name__=='__main__':
     main()
-
