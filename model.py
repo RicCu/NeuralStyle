@@ -41,6 +41,8 @@ class Residual(nn.Module):
 
 
 class Conv(nn.Module):
+    """Convolutional block. 2d-conv -> batch norm -> (optionally) relu"""
+
     def __init__(self, in_channels, out_channels, kernel, stride=1,
                  use_relu=True):
         super(Conv, self).__init__()
@@ -111,11 +113,99 @@ class FastStyle(nn.Module):
         self.apply(__init)
 
 
+class _TextureConvGroup(nn.Module):
+    """Group of 3 convolutional blocks.
+
+    1.- reflect_padding()
+    2.- Conv(in_channels, out_channels, kernel=3, use_relu=False)
+    3.- LeakyReLU()
+    4.- reflect_padding()
+    5.- Conv(out_channels, out_channels, kernel=3)
+    6.- LeakyReLU()
+    7.- reflect_padding()
+    8.- Conv(out_channels, out_channels, kernel=1)
+    9.- LeakyReLU()
+    """
+
+    def __init__(self, in_channels, out_channels):
+        super(_TextureConvGroup, self).__init__()
+        self.block1 = Conv(in_channels, out_channels, 3, use_relu=False)
+        self.block2 = Conv(out_channels, out_channels, 3, use_relu=False)
+        self.block3 = Conv(out_channels, out_channels, 1, use_relu=False)
+
+    def forward(self, x):
+        h = reflect_padding(x, 3, 1)
+        h = self.block1(h)
+        h = F.leaky_relu(h)
+        h = reflect_padding(h, 3, 1)
+        h = self.block2(h)
+        h = F.leaky_relu(h)
+        h = reflect_padding(h, 1, 1)
+        h = self.block3(h)
+        h = F.leaky_relu(h)
+        return h
+
+
+class _TextureJoinBlock(nn.Module):
+    """Joins activations from two distinct sizes"""
+
+    def __init__(self, in_channels_small, in_channels_large):
+        super(_TextureJoinBlock, self).__init__()
+        self.bn_small = nn.BatchNorm2d(in_channels_small)
+        self.bn_large = nn.BatchNorm2d(in_channels_large)
+
+    def forward(self, x):
+        """X (list) <-- [x_small, x_large]"""
+        x_small, x_large = x
+        x_small = self.bn_small(F.interpolate(x_small, x_large.shape[2:]))
+        x_large = self.bn_large(x_large)
+        return torch.cat([x_small, x_large], dim=1)
+
+
+class TextureNetwork(nn.Module):
+
+    def __init__(self, K=6, base_num_channels=8):
+        super(TextureNetwork, self).__init__()
+        self.K = K - 1
+        self.img_blocks = nn.ModuleList()
+        for _ in range(K):
+            self.img_blocks.append(_TextureConvGroup(4, base_num_channels))
+        self.second_blocks = nn.ModuleList()
+        pre_num_channels = base_num_channels
+        for _ in range(K-1):
+            num_channels = pre_num_channels + base_num_channels
+            self.second_blocks.append(
+                nn.Sequential(
+                    _TextureJoinBlock(pre_num_channels, base_num_channels),
+                    _TextureConvGroup(num_channels, num_channels)
+                    )
+                )
+            pre_num_channels = num_channels
+        self.out = Conv(num_channels, 3, kernel=1, use_relu=False)
+        self.noise_dist = torch.distributions.Uniform(low=0.0, high=1.0)
+
+    def forward(self, img, noise_scale=1):
+        x = self._preprocess_image(img, self.K, noise_scale)
+        h_small = self.img_blocks[0](x)
+        for i in range(0, self.K):
+            x = self._preprocess_image(img, self.K - i - 1, noise_scale)
+            h_large = self.img_blocks[i + 1](x)
+            h_small = self.second_blocks[i]([h_small, h_large])
+        h = reflect_padding(h_small, 1, 1)
+        return torch.tanh(self.out(h)) * 0.5 + 0.5
+
+    def _preprocess_image(self, img, image_scale, noise_scale):
+        b, _, h, w = img.shape
+        h, w = int(h / (2**image_scale)), int(w / (2**image_scale))
+        z = noise_scale * self.noise_dist.sample(torch.Size([b, 1, h, w]))
+        return torch.cat([F.interpolate(img, [h, w]), z.to(img)], dim=1)
+
+
 def reflect_padding(x, f, s, half=False):
     if half:
         denom = 2
     else:
-        denom= 1
+        denom = 1
     _, _, h, w = x.shape
     pad_w = (w * ((s/denom) - 1) + f - s)
     pad_h = (h * ((s/denom) - 1) + f - s)
@@ -130,4 +220,3 @@ def reflect_padding(x, f, s, half=False):
     else:
         pad_t = pad_b = int(pad_h / 2)
     return F.pad(x, [pad_l, pad_r, pad_t, pad_b], mode='reflect')
-
