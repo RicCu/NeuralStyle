@@ -25,6 +25,7 @@ import monitor
 import utils
 from loss import *
 from model import FastStyle
+from model import TextureNetwork
 
 
 CONTENT_LAYERS = ['relu_4']
@@ -60,7 +61,12 @@ def train(params):
     data = utils.build_dataloader(params.content_data, params.shape,
                                   params.batch_size, params.device)
     style_img = utils.load_image(params.style_data).to(params.device)
-    net = FastStyle().to(params.device)
+
+    if params.texture:
+        net = TextureNetwork(noise_scale=params.noise_scale).to(params.device)
+    else:
+        net = FastStyle().to(params.device)
+
     vgg = VGG16(STYLE_LAYERS).to(params.device)
     vgg.eval()
 
@@ -85,7 +91,8 @@ def train(params):
             image = net(content)
             activations = vgg(image)
             content.requires_grad = False
-            content_activations = vgg(content)
+            with torch.no_grad():
+                content_activations = vgg(content)
             losses = lossFn(activations, image, content_activations)
             losses['total_loss'].backward()
             optimizer.step()
@@ -135,7 +142,12 @@ def eval(params):
     """Use a pretrained model to appply style to a given image."""
     with torch.no_grad():
         content_img = utils.load_image(params.content_data)
-        net = FastStyle()
+
+        if params.texture:
+            net = TextureNetwork(noise_scale=params.noise_scale)
+        else:
+            net = FastStyle()
+
         net.load_state_dict(torch.load(params.model))
         img = net(content_img).squeeze(0)
         img_name = params.name + '_' + params.content_data.split('/')[-1]
@@ -155,6 +167,11 @@ def main():
                         help='Use a saved model to transform a content image')
     parser.add_argument('--model', type=str, default=None,
                         help='Path to saved model for fast style transfer')
+    parser.add_argument('--texture', default=False, action='store_true',
+                        help='Set flag to use a Texture Network')
+    parser.add_argument('--noise-scale', type=float, default=1.0,
+                        help='Scale of the noise tensor in Texture Networks. '
+                        'This only has an effect if --texture is set')
     params = parser.parse_args()
     if params.eval:
         if params.model is None:
@@ -168,4 +185,3 @@ def main():
 
 if __name__=='__main__':
     main()
-

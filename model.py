@@ -164,15 +164,16 @@ class _TextureJoinBlock(nn.Module):
 
 class TextureNetwork(nn.Module):
 
-    def __init__(self, K=6, base_num_channels=8):
+    def __init__(self, num_scales=6, base_num_channels=8, noise_scale=1):
         super(TextureNetwork, self).__init__()
-        self.K = K - 1
+        self.num_scales = num_scales - 1
+        self.noise_scale = noise_scale
         self.img_blocks = nn.ModuleList()
-        for _ in range(K):
+        for _ in range(num_scales):
             self.img_blocks.append(_TextureConvGroup(4, base_num_channels))
         self.second_blocks = nn.ModuleList()
         pre_num_channels = base_num_channels
-        for _ in range(K-1):
+        for _ in range(num_scales - 1):
             num_channels = pre_num_channels + base_num_channels
             self.second_blocks.append(
                 nn.Sequential(
@@ -184,20 +185,21 @@ class TextureNetwork(nn.Module):
         self.out = Conv(num_channels, 3, kernel=1, use_relu=False)
         self.noise_dist = torch.distributions.Uniform(low=0.0, high=1.0)
 
-    def forward(self, img, noise_scale=1):
-        x = self._preprocess_image(img, self.K, noise_scale)
+    def forward(self, img):
+        x = self._preprocess_image(img, self.num_scales)
         h_small = self.img_blocks[0](x)
-        for i in range(0, self.K):
-            x = self._preprocess_image(img, self.K - i - 1, noise_scale)
+        for i in range(0, self.num_scales):
+            x = self._preprocess_image(img, self.num_scales - i - 1)
             h_large = self.img_blocks[i + 1](x)
             h_small = self.second_blocks[i]([h_small, h_large])
         h = reflect_padding(h_small, 1, 1)
         return torch.tanh(self.out(h)) * 0.5 + 0.5
 
-    def _preprocess_image(self, img, image_scale, noise_scale):
+    def _preprocess_image(self, img, image_scale):
         b, _, h, w = img.shape
         h, w = int(h / (2**image_scale)), int(w / (2**image_scale))
-        z = noise_scale * self.noise_dist.sample(torch.Size([b, 1, h, w]))
+        z = self.noise_dist.sample(torch.Size([b, 1, h, w]))
+        z = self.noise_scale * z
         return torch.cat([F.interpolate(img, [h, w]), z.to(img)], dim=1)
 
 
