@@ -1,6 +1,6 @@
 # NeuralStyle
 This repository includes implementations for descriptive and generative style transfer techniques. The algorithms are generally
-based on the originals introduced in [2] and [3], however it's not intended to reproduce the exact results of either paper, 
+based on the originals introduced in [[2]](../master/README.md#references) and [[3]](../master/README.md#references), however it's not intended to reproduce the exact results of either paper, 
 thus some hyperparameters and other implementation details have been changed.
 
 ## Dependencies
@@ -21,7 +21,7 @@ respectively. Common arguments include:
 - `--cuda` use single gpu if available
 - `--style-data` path to target style image
 - `--content-data` path to a directory of directories with images (*generative*) or a single image (*descriptive*)
-- `--shape` height and width for content data (optional for descriptive algorithm)
+- `--shape` height and width for content data
 - `--content-weight` weight for content-component loss
 - `--style-weight` weight for style-component loss
 - `--tv-weight` weight for total variation-component loss
@@ -38,6 +38,13 @@ respectively. Common arguments include:
 - `--eval` use to transform an image with a pretrained model
 - `--model` path to pretrained model (used with `--eval`)
 
+**export.py**
+Script to export pretrained models into ONNX.
+
+- `--ckpt` path to pretrained model, it must include the file's parent directory, this will be used as the new file's name
+- `--data` dummy image to use during export, if this isn't set, a random tensor will be used, but shape must be set
+- `--shape` height and width of dummy image
+
 For live visualizations you must have a local visdom server running: `python -m visdom.server`.
 
 **Examples**
@@ -50,8 +57,8 @@ python descriptive.py --content-data .assets/guadalajara.jpg --style-data .asset
 Alternatively, the script `main.py` may be used with the flags `--descriptive` or `--generative`.
 
 ## References
-[1] Jing, et al. (2018). *Neural Style Transfer: A Review*. arXiv:1705.04058v6
+**[1]** [Jing, et al. (2018). *Neural Style Transfer: A Review*. arXiv:1705.04058v6 [cs.CV]](https://arxiv.org/abs/1705.04058)
 
-[2] Gatys L., Ecker A., Bethge M. (2015). *A Neural Algorithm of Artistic Style*. arXiv:1508.06576v2
+**[2]** [Gatys L., Ecker A., Bethge M. (2015). *A Neural Algorithm of Artistic Style*. arXiv:1508.06576v2 [cs.CV]](https://arxiv.org/abs/1508.06576)
 
-[3] Johnson J., Alahi A., Fei-Fei L. (2016). *Perceptual Losses for Real-Time Style Transfer and Super-Resolution*. arXiv:1603.08155v1
+**[3]** [Johnson J., Alahi A., Fei-Fei L. (2016). *Perceptual Losses for Real-Time Style Transfer and Super-Resolution*. arXiv:1603.08155v1 [cs.CV]](https://arxiv.org/abs/1603.08155)
