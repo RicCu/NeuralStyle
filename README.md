@@ -7,6 +7,7 @@ This project uses [PyTorch 0.4.1](https://github.com/pytorch/pytorch/releases/ta
 [Visdom (8c6322d)](https://github.com/facebookresearch/visdom) for training visualizations. Please refer to their corresponding project websites for installation instructions.
 
 ## Examples
+
 ### Original
 <p align="center">
   <img src="../master/.assets/guadalajara.jpg">
@@ -20,10 +21,6 @@ This project uses [PyTorch 0.4.1](https://github.com/pytorch/pytorch/releases/ta
 | Texture Network | ![](../master/.assets/texture/scream_01.jpg) | ![](../master/.assets/texture/udnie_1.jpg) |
 | Style image | ![](../master/.assets/styles/scream.jpg) | ![](../master/.assets/styles/udnie.jpg) |
 
-
-![Udnie Guadalajara](../master/.assets/fast_style_transfer/udnie_guadalajara.jpg)
-
-![Scream Guadalajara](../master/.assets/fast_style_transfer/scream_guadalajara.jpg)
 
 ## Usage
 The scripts `descriptive.py` and `generative.py` may be used to iteratively transform a single image or train a neural network, respectively. Common arguments include:
