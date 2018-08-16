@@ -43,6 +43,8 @@ def train(params):
     content_img = utils.load_image(params.content_data,
                                    params.shape).to(params.device)
     style_img = utils.load_image(params.style_data).to(params.device)
+    if params.shape is None:
+        params.shape = content_img.shape[2:]
     image = torch.empty(1, 3, *params.shape,
                         device=params.device).uniform_().requires_grad_()
     vgg = VGG16(STYLE_LAYERS).to(params.device)
@@ -126,6 +128,8 @@ def main():
                         help='Directory to store resulting images')
     parser.add_argument('--epochs', type=int, default=500,
                         help='Number of epochs to optimize')
+    parser.add_argument('--shape', nargs='+', type=int,
+                        help='Height x width')
     params = parser.parse_args()
     params = utils.set_device(params)
     train(params)

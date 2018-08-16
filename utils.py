@@ -20,8 +20,6 @@ def build_common_arguments(parser):
     parser.add_argument('--style-data', type=str,
                         default='.assets/styles/scream.jpg',
                         help='Style image')
-    parser.add_argument('--shape', default=[256, 256], nargs='+', type=int,
-                        help='Height x width')
     parser.add_argument('--content-weight', type=float, default=1e4,
                         help='Weight of content loss')
     parser.add_argument('--style-weight', type=float, default=1e4,

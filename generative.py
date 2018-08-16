@@ -168,6 +168,8 @@ def main():
                         help='Use a saved model to transform a content image')
     parser.add_argument('--model', type=str, default=None,
                         help='Path to saved model for fast style transfer')
+    parser.add_argument('--shape', default=[256, 256], nargs='+', type=int,
+                        help='Height x width')
     parser.add_argument('--texture', default=False, action='store_true',
                         help='Set flag to use a Texture Network')
     parser.add_argument('--noise-scale', type=float, default=1.0,
